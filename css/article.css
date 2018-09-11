@@ -52,16 +52,15 @@ article .container .row .pullquote.left {
   float: left;
 }
 figure.highlight {
-  background: #eee;
+  background: #282c34;
   border: 1px solid color-border;
   margin-top: 15px;
   padding: 7px 15px;
   border-radius: 2px;
-  text-shadow: 0 0 1px #fff;
-  line-height: 1.6;
+  line-height: 2;
   overflow: auto;
   position: relative;
-  font-size: 0.9em;
+  font-size: 2em;
 }
 figure.highlight figcaption {
   color: color-meta;
@@ -90,15 +89,21 @@ figure.highlight table .gutter {
   text-align: right;
 }
 figure.highlight table .code {
-  padding-left: 15px;
   border-left: 1px solid #fff;
-  color: #666;
+  color: #eed;
 }
-figure.highlight table .line {
-  height: 20px;
+figure.highlight font-size 15px {
+  font-family: Consolas, Monaco, Andale Mono, monospace;
 }
-figure.highlight table .line.marked {
+figure.highlight font-size 15px padding-left 20px .line {
+  height: 20p;
+}
+figure.highlight font-size 15px color #eed .line.marked {
   background: #d6d6d6;
+}
+pre {
+  font-size: 15px;
+  line-height: 2;
 }
 pre .comment,
 pre .template_comment,
@@ -167,4 +172,13 @@ pre .clojure .title {
 }
 pre .deletion {
   color: #dc322f;
+}
+pre span {
+  padding-left: 5px;
+}
+pre .line {
+  color: #eed;
+}
+font-size 15px {
+  font-family: Consolas, Monaco, Andale Mono, monospace;
 }
