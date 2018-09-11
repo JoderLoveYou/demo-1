@@ -504,7 +504,7 @@ figure.highlight {
   margin-top: 15px;
   padding: 7px 15px;
   border-radius: 2px;
-  line-height: 1.5;
+  line-height: 1;
   overflow: auto;
   position: relative;
   font-size: 2em;
@@ -549,8 +549,8 @@ figure.highlight font-size 15px color #eed .line.marked {
   background: #d6d6d6;
 }
 pre {
-  font-size: 15px;
-  line-height: 2;
+  font-size: 14px;
+  line-height: 1.5;
 }
 pre .comment,
 pre .template_comment,
