@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!--Description-->
+
+    
+
+    
+        <meta name="description" content="maven自定义插件–附实现git自动打包上传
+准备
+
+idea
+maven
+
+
+新建项目1.选择maven模板
+后续操作跟新建其它项目一样，Maven的插件也是一种packaging类型（类型为maven-plugin），也拥有groupId，artifactId和version。简单地讲，一个M"/>
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Joder"/>
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="maven自定义插件--实现git自动打包上传"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="maven自定义插件–附实现git自动打包上传
+准备
+
+idea
+maven
+
+
+新建项目1.选择maven模板
+后续操作跟新建其它项目一样，Maven的插件也是一种packaging类型（类型为maven-plugin），也拥有groupId，artifactId和version。简单地讲，一个M"/>
+    
+
+    <!--Open Graph Site Name-->
+        <meta property="og:site_name" content="Joder"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article"/>
+    
+
+    <!--Page Cover-->
+    
+    
+        <meta property="og:image" content="/img/home-bg.jpg"/>
+    
+
+        <meta name="twitter:card" content="summary_large_image"/>
+
+    
+
+    
+        <meta name="twitter:image" content="/img/home-bg.jpg"/>
+    
+
+    <!-- Title -->
+    
+    <title>maven自定义插件--实现git自动打包上传 - Joder</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlight.css">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css"/>
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="https://cdn.bootcss.com/featherlight/1.7.13/featherlight.min.css" rel="stylesheet">
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+    <link rel="icon" href="/img/favicon.ico"/>
+    
+
+	<script> 
+		window.onload = function() {  
+			var show = $("#dateshow");  
+			setInterval(function() {   
+				var time = new Date();   // 程序计时的月从0开始取值后+1   
+				var m = time.getMonth() + 1;   
+				var t = time.getFullYear() + "-" + m + "-"     
+					+ time.getDate() + " " + time.getHours() + ":"     
+					+ time.getMinutes() + ":" + time.getSeconds();   
+				show.text(t);  
+			}, 1000); 
+		};
+	</script>
+	<script src="https://pv.sohu.com/cityjson?ie=utf-8"></script> 
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">
+				<!-- 欢迎来自 -->
+				欢迎来自&nbsp;
+			</a>
+			<a class="navbar-brand" href="#" id="local" data-toggle="tooltip" data-placement="bottom" style="font-size:150%" ></a>
+			<a class="navbar-brand" href="/">
+				&nbsp;的朋友
+			</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">	
+				<li ><a href="/">主页</a></li>
+				<li ><a href="/archives">归档</a></li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
+						标签
+					<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						
+							<li class="change">
+								<a href="/tags/java">
+									java
+								</a>
+							</li>
+						
+							<li class="change">
+								<a href="/tags/scala">
+									scala
+								</a>
+							</li>
+						
+							<li class="change">
+								<a href="/tags/spark">
+									spark
+								</a>
+							</li>
+						
+							<li class="change">
+								<a href="/tags/hadoop">
+									hadoop
+								</a>
+							</li>
+						
+							<li class="change">
+								<a href="/tags/springboot">
+									springboot
+								</a>
+							</li>
+						
+							<li class="change">
+								<a href="/tags/rabbitmq">
+									rabbitmq
+								</a>
+							</li>
+						
+							<li class="change">
+								<a href="/tags/其他">
+									其他
+								</a>
+							</li>
+						
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
+						类别
+					<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						
+							<li >
+								<a class="change" href="/categories/hexo">
+									hexo
+								</a>
+							</li>
+						
+							<li >
+								<a class="change" href="/categories/大数据">
+									大数据
+								</a>
+							</li>
+						
+							<li >
+								<a class="change" href="/categories/微服务">
+									微服务
+								</a>
+							</li>
+						
+					</ul>
+				</li>
+				<li>
+                    <a href="https://github.com/Joderxx/">
+                        <i class="fa fa-github fa-stack-2x"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script> 
+	$("#local").attr("title","ip: "+returnCitySN["cip"]); 
+	$("#local").text(returnCitySN["cname"]);
+</script>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('/bg/bg2.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>maven自定义插件--实现git自动打包上传</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2019-02-19
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+					标签：
+                    
+                        
+
+
+<a class="btn btn-default btn-sm" href="/tags/maven/">maven</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+					类别：
+                    
+                        
+
+<a class="btn btn-default btn-sm" href="/categories/java/">java</a>
+
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>maven自定义插件–附实现git自动打包上传</p>
+<h4 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h4><hr>
+<ul>
+<li>idea</li>
+<li>maven</li>
+</ul>
+<hr>
+<h4 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h4><h5 id="1-选择maven模板"><a href="#1-选择maven模板" class="headerlink" title="1.选择maven模板"></a>1.选择maven模板</h5><p><img src="/images/maven1.png" alt="图片"></p>
+<p>后续操作跟新建其它项目一样，Maven的插件也是一种packaging类型（类型为maven-plugin），也拥有groupId，artifactId和version。简单地讲，一个Maven插件包含了一些列的goal，每一个goal对应于一个Mojo类（Maven Old Java Object，命名来自于Pojo），每个Mojo都需要实现org.apache.maven.plugin.Mojo接口，该接口定义了一个execute方法，在开发插件时，你的任务就是实现这个execute方法。</p>
+<hr>
+<h5 id="2-引入jar"><a href="#2-引入jar" class="headerlink" title="2.引入jar"></a>2.引入jar</h5><p>这里只是用了maven引入相关的jar包，<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-plugin-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugin-tools<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-plugin-annotations<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-io<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-io<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<hr>
+<h5 id="编程"><a href="#编程" class="headerlink" title="编程"></a>编程</h5><p>import org.apache.maven.plugin.AbstractMojo;<br>import org.apache.maven.plugin.MojoExecutionException;<br>import org.apache.maven.plugin.MojoFailureException;<br>import org.apache.maven.plugins.annotations.Mojo;<br>import org.apache.maven.plugins.annotations.Parameter;</p>
+<p>/**</p>
+<ul>
+<li>@author xiejiedun<br>*</li>
+<li><p>Mojo : name 指定运行所需的前缀名<br>*/<br>@Mojo(name = “demo”)<br>public class DemoMojo extends AbstractMojo {</p>
+<p> /**</p>
+<ul>
+<li>通过@Parameter注解指定默认值</li>
+<li><p>name代表可以传入参数name<br>*/<br>@Parameter(defaultValue = “Jack”)<br>private String name;</p>
+<p>public void execute() throws MojoExecutionException, MojoFailureException {<br> System.out.println(“Hello World, “+name);<br>}<br>}</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h5 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h5><p>使用mvn clean install进行打包</p>
+<hr>
+<h6 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h6><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn consum.plugins:git-plugin:<span class="number">1</span>.<span class="number">0</span>-SNAPSHOT:demo</span><br></pre></td></tr></table></figure>
+<p><img src="/images/maven2.png" alt="图片"></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn consum.plugins:git-plugin:<span class="number">1</span>.<span class="number">0</span>-SNAPSHOT:demo -Dname=Joder</span><br></pre></td></tr></table></figure>
+<p><img src="/images/maven3.png" alt="图片"></p>
+
+
+                
+            </div>
+			
+			<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+				<ul class="pager">
+    
+    
+        <li class="next"><a href="/">下一页  &rarr;</a></li>
+    
+</ul>
+			</div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+			
+        </div>
+    </div>
+</article>
+	
+	
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Joderxx/" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="mailto:a974318723@gmail.com" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2019 Joder<br></p>
+				
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
